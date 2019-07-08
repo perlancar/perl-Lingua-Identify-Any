@@ -1,10 +1,3 @@
-0.02    2016-01-18 (PERLANCAR)
-
-        - No functional changes.
-
-        - [build] Rebuild to fix POD section ordering.
-
-
-0.01    2015-11-18 (PERLANCAR)
+0.001   2019-07-08  Released-By: PERLANCAR
 
         - First, early release.
