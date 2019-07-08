@@ -54,7 +54,10 @@ sub detect_text_language {
     );
     @backends = @{ $args{backends} } if $args{backends};
 
-    my $res = [500, "No backend was tried"];
+    my $res = [500, "No backend was tried", {}, {
+        'func.attempted_backends' => [],
+    }];
+
   BACKEND:
     for my $backend (@backends) {
         if ($backend eq 'Lingua::Identify') {
@@ -64,6 +67,7 @@ sub detect_text_language {
                 next BACKEND;
             }
             my @bres = Lingua::Identify::langof($args{text});
+            push @{$res->[3]{'func.attempted_backends'}}, 'Lingua::Identify';
             if (!@bres) {
                 log_debug "Backend 'Lingua::Identify' failed to detect language, trying the next backend";
                 next BACKEND;
@@ -76,13 +80,16 @@ sub detect_text_language {
                     confidence => $bres[1],
                 },
             ];
-            last BACKEND;
+            goto RETURN_RES;
             # XXX put the other less probable language to func.*
         } else {
             log_warn "Unknown/unsupported backend '$backend'";
         }
     }
 
+    $res->[1] = 'No backends were able to detect the language'
+        if @{ $res->[3]{'func.attempted_backends'} };
+  RETURN_RES:
     $res;
 }
 
