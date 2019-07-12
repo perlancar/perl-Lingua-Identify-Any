@@ -39,6 +39,7 @@ _
             schema => 'str*',
             req => 1,
             pos => 0,
+            cmdline_src => 'stdin_or_file',
         },
         backends => {
             schema => ['array*', of=>['str*', in=>\@BACKENDS]],
